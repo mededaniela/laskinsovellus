@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, TextInput, View, Text, Button } from 'react-native';
+import { StyleSheet, TextInput, View, Text, Button, FlatList } from 'react-native';
 import { useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 
@@ -8,10 +8,19 @@ export default function App() {
   const [numberone, setNumberone] = useState("");
   const [numbertwo, setNumbertwo] = useState("");
   const [result, setResult] = useState("");
+  const [data, setData] = useState([]);
+
+  const buttonPressedPlus = () => {
+    const calculation = `${numberone} + ${numbertwo} = ${parseFloat(numberone) + parseFloat(numbertwo)}`;
+    setData([...data, calculation]);
+  };
+  
+  const buttonPressedMinus = () => {
+    const calculation = `${numberone} - ${numbertwo} = ${parseFloat(numberone) - parseFloat(numbertwo)}`;
+    setData([...data, calculation]);
+  }
 
   const { height, width, scale, fontScale } = useWindowDimensions();
-
-
 
   return (
     <View style={wholestyle.container}>
@@ -23,8 +32,12 @@ export default function App() {
           onChangeText={numbertwo => setNumbertwo(numbertwo)} value={numbertwo} />
       </View>
       <View style={buttonstyles.container}>
-        <Button onPress={() => setResult(parseFloat(numberone) + parseFloat(numbertwo))} title="+" />
-        <Button onPress={() => setResult(parseFloat(numberone) - parseFloat(numbertwo))} title="-" />
+      <Button onPress={() => buttonPressedPlus()} title="+" />
+        <Button onPress={() => buttonPressedMinus()} title="-" />
+      </View>
+      <View>
+      <FlatList data={data} renderItem={({item}) => <Text>{item}</Text>}
+keyExtractor={(item, index) => index.toString()} />
       </View>
     </View>
   );
